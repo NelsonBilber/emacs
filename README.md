@@ -1,4 +1,4 @@
 emacs
 =====
 
-simple preferencies file for OSX
+simple preferences file for OSX
