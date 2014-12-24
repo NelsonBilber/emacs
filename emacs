@@ -35,12 +35,12 @@
 
 
 ;neotree
-(add-to-list 'load-path "/Users/nbr/.emacs.d/neotree")
+(add-to-list 'load-path "/Users/…/.emacs.d/neotree")
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 
 ;dirtree
-(add-to-list 'load-path "/Users/nbr/.emacs.d/dirtree")
+(add-to-list 'load-path "/Users/…/.emacs.d/dirtree")
 (require 'tree-mode)
 (require 'windata)
 (require 'dirtree)
