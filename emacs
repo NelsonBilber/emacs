@@ -1,19 +1,22 @@
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(custom-enabled-themes (quote (wheatgrass))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; keyboard hacks
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(set-input-mode nil nil 1)
+(load-library "iso-ascii")
+(load-library "iso-transl")
+
+(if (>= emacs-major-version 21)
+	(progn
+	  (set-language-environment 'latin-1)
+	  (set-terminal-coding-system 'latin-1)
+	  (set-keyboard-coding-system 'latin-1)
+	  )
+  (progn
+	(set-terminal-coding-system 'latin-1)
+	(set-keyboard-coding-system 'latin-1)
+	(set-language-environment 'latin-1)
+	)
+  )
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -23,7 +26,11 @@
 (setq mac-option-modifier nil
       mac-command-modifier 'meta
       x-select-enable-clipboard t)
-
+(set-keyboard-coding-system nil) 
+;(setq mac-command-modifier 'meta)
+;(setq ns-right-alternate-modifier nil)
+(setq mac-option-modifier 'none)
+(setq mac-command-modifier 'meta)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;backup files and auto-save (~)
@@ -39,18 +46,17 @@
 (setq ring-bell-function 'ignore) ;disable buffer sounds
 
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-:: Tree -mode
+;; Tree mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;neotree
-(add-to-list 'load-path "/Users/…/.emacs.d/neotree")
+(add-to-list 'load-path "/Users/nbr/.emacs.d/neotree")
 (require 'neotree)
 (global-set-key [f8] 'neotree-toggle)
 
 ;dirtree
-(add-to-list 'load-path "/Users/…/.emacs.d/dirtree")
+(add-to-list 'load-path "/Users/nbr/.emacs.d/dirtree")
 (require 'tree-mode)
 (require 'windata)
 (require 'dirtree)
@@ -58,7 +64,13 @@
 (global-set-key "\C-o" 'dirtree-show)
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; C++ 
+;; C++ identation
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq-default c-basic-offset 4 c-default-style "linux")
+(setq-default tab-width 4 indent-tabs-mode t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; C++ 
@@ -89,12 +101,11 @@
 (add-hook 'c++-mode-hook 'my:ac-c-header-init)
 (add-hook 'c-mode-hook 'my:ac-c-header-init)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;C++ - part 3
 ;https://www.youtube.com/watch?v=Ib914gNr0ys
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;turn on Semantic
 (semantic-mode 1)
@@ -113,6 +124,50 @@
 
 
 
+;; GTAGS
+
+;; (require 'ggtags)
+;; (add-hook 'c-mode-common-hook
+;;           (lambda ()
+;;             (when (derived-mode-p 'c-mode 'c++-mode 'java-mode 'asm-mode)
+;;               (ggtags-mode 1))))
+
+;; (define-key ggtags-mode-map (kbd "C-c g s") 'ggtags-find-other-symbol)
+;; (define-key ggtags-mode-map (kbd "C-c g h") 'ggtags-view-tag-history)
+;; (define-key ggtags-mode-map (kbd "C-c g r") 'ggtags-find-reference)
+;; (define-key ggtags-mode-map (kbd "C-c g f") 'ggtags-find-file)
+;; (define-key ggtags-mode-map (kbd "C-c g c") 'ggtags-create-tags)
+;; (define-key ggtags-mode-map (kbd "C-c g u") 'ggtags-update-tags)
+
+;; (define-key ggtags-mode-map (kbd "M-,") 'pop-tag-mark)
+
+
+;; ;; GETAGS - helm
+;; (setq
+;;  helm-gtags-ignore-case t
+;;  helm-gtags-auto-update t
+;;  helm-gtags-use-input-at-cursor t
+;;  helm-gtags-pulse-at-cursor t
+;;  helm-gtags-prefix-key "\C-cg"
+;;  helm-gtags-suggested-key-mapping t
+;;  )
+
+;; (require 'helm-gtags)
+;; ;; Enable helm-gtags-mode
+;; (add-hook 'dired-mode-hook 'helm-gtags-mode)
+;; (add-hook 'eshell-mode-hook 'helm-gtags-mode)
+;; (add-hook 'c-mode-hook 'helm-gtags-mode)
+;; (add-hook 'c++-mode-hook 'helm-gtags-mode)
+;; (add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+;; (define-key helm-gtags-mode-map (kbd "C-c g a") 'helm-gtags-tags-in-this-function)
+;; (define-key helm-gtags-mode-map (kbd "C-j") 'helm-gtags-select)
+;; (define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+;; (define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+;; (define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+;; (define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -127,3 +182,11 @@
   )
 )
 
+
+;; org-mode
+; Set to the location of your Org files on your local system
+(setq org-directory "~/org")
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "~/org/flagged.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
