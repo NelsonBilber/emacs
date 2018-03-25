@@ -1,7 +1,8 @@
-#Emacs
+# Emacs
 
 I like emacs ... and other operating systems too<br/>
 
-This is a simple configuration for : <br/>
-* cpp
+Literate Emacs settings files for : <br/>
+* OSx tweaks
+* C++
 * Org-mode

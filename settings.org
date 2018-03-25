@@ -1,5 +1,5 @@
-* Generic Emacs Settings
-** Generics
+* General Settings
+** General
 #+BEGIN_SRC emacs-lisp
 ;; The deeper blue theme is loaded but the resulting text
 ;; appears black in Aquamacs. This can be fixed by setting
@@ -41,37 +41,37 @@
 ;;(when (not indicate-empty-lines)
 ;;  (toggle-indicate-empty-lines))
 #+END_SRC
-** stop creating those backup files					
+** Stop creating those backup files					
 #+BEGIN_SRC emacs-lisp
 (setq make-backup-files nil) 
 #+END_SRC
-** we don't want to type yes and no all the time so, do y and n
+** We don't want to type yes and no all the time so, do y and n
 #+BEGIN_SRC emacs-lisp
 (defalias 'yes-or-no-p 'y-or-n-p)
 #+END_SRC
-** disable the auto-save
+** Disable the auto-save
 #+BEGIN_SRC emacs-lisp
 (setq auto-save-default nil)
 #+END_SRC
 # (menu-bar-mode -1)
-** turn off toolbar
+** Turn-off toolbar
 #+BEGIN_SRC emacs-lisp
 (if window-system
     (tool-bar-mode 0))
 #+END_SRC
-** disable buffer sounds
+** Disable buffer sounds
 #+BEGIN_SRC emacs-lisp
 (setq ring-bell-function 'ignore) 
 #+END_SRC
-** emacs CUA keys
+** CUA keys
 #+BEGIN_SRC emacs-lisp
 (cua-mode 1)
 #+END_SRC
-** white Spaces
+** White Spaces
 #+BEGIN_SRC emacs-lisp
 (require 'whitespace)
 #+END_SRC
-** use tabs
+** Tabs
 #+BEGIN_SRC emacs-lisp
 (defun my-insert-tab-char ()
   "Insert a tab char. (ASCII 9, \t)"
@@ -80,7 +80,7 @@
 (global-set-key (kbd "TAB") 'my-insert-tab-char) ; same as Ctrl+i
 (setq cperl-invalid-face 'default)
 #+END_SRC
-** word wrap
+** Word wrap
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
 #+END_SRC
@@ -192,7 +192,7 @@
       mac-allow-anti-aliasing t
       mac-command-key-is-meta t)
 #+END_SRC
-* MELPA PACKAGES
+* Melpa Packages
 # load emacs 24's package system. Add MELPA repository.
 #+BEGIN_SRC emacs-lisp
 (when (>= emacs-major-version 24)
@@ -250,7 +250,7 @@
 
 #+END_SRC
 * C++
-** flycheck
+** Flycheck
 #+BEGIN_SRC emacs-lisp
 ;; If for some reason you're not using CMake you can use a tool like
 ;; bear (build ear) to get a compile_commands.json file in the root
@@ -295,7 +295,48 @@
 ;; Load rtags and start the cmake-ide-setup process
 (require 'rtags)
 #+END_SRC
-** Setup cmake-ide
+** Flyspell Mode for Spelling Corrections
+#+BEGIN_SRC emacs-lisp
+(require 'flyspell)
+;; The welcome message is useless and can cause problems
+(setq flyspell-issue-welcome-flag nil)
+;; Fly spell keyboard shortcuts so no mouse is needed
+;; Use helm with flyspell
+(define-key flyspell-mode-map (kbd "<f8>") 'helm-flyspell-correct)
+;; (global-set-key (kbd "<f8>") 'ispell-word)
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+;; Set the way word highlighting is done
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word."
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word)
+  )
+
+;; Spell check comments in c++ and c common
+(add-hook 'c++-mode-hook  'flyspell-prog-mode)
+(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
+
+;; Enable flyspell in text mode
+(if (fboundp 'prog-mode)
+    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (dolist (hook '(lisp-mode-hook emacs-lisp-mode-hook scheme-mode-hook
+				 clojure-mode-hook ruby-mode-hook yaml-mode
+				 python-mode-hook shell-mode-hook php-mode-hook
+				 css-mode-hook haskell-mode-hook caml-mode-hook
+				 nxml-mode-hook crontab-mode-hook perl-mode-hook
+				 tcl-mode-hook javascript-mode-hook))
+    (add-hook hook 'flyspell-prog-mode)))
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+#+END_SRC
+** Cmake-ide
 #+BEGIN_SRC emacs-lisp
 (require 'cmake-ide)
 (cmake-ide-setup)
@@ -311,7 +352,7 @@
 (setq rtags-completions-enabled t)
 (rtags-enable-standard-keybindings)
 #+END_SRC
-** Set up code completion with company and irony
+** Company and Irony
 #+BEGIN_SRC emacs-lisp
 (require 'company)
 (require 'company-rtags)
@@ -424,7 +465,7 @@
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 #+END_SRC
-** cmake-mode
+** Cmake-mode
 #+BEGIN_SRC emacs-lisp
 (require 'cmake-mode)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -432,7 +473,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.ci\\'" . c++-mode))
 #+END_SRC
-** yasnippet
+** Yasnippet
 #+BEGIN_SRC emacs-lisp
 (require 'yasnippet)
 ;; To get a bunch of extra snippets that come in super handy see:
@@ -443,7 +484,7 @@
 (yas-global-mode 1)
 (yas-reload-all)
 #+END_SRC
-* Set up helm
+* Helm
 #+BEGIN_SRC emacs-lisp
 ;; Load helm and set M-x to helm, buffer to helm, and find files to herm
 (require 'helm-config)
@@ -480,55 +521,12 @@
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 #+END_SRC
-* Flyspell Mode for Spelling Corrections
-#+BEGIN_SRC emacs-lisp
-(require 'flyspell)
-;; The welcome message is useless and can cause problems
-(setq flyspell-issue-welcome-flag nil)
-;; Fly spell keyboard shortcuts so no mouse is needed
-;; Use helm with flyspell
-(define-key flyspell-mode-map (kbd "<f8>") 'helm-flyspell-correct)
-;; (global-set-key (kbd "<f8>") 'ispell-word)
-(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
-(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
-;; Set the way word highlighting is done
-(defun flyspell-check-next-highlighted-word ()
-  "Custom function to spell check next highlighted word."
-  (interactive)
-  (flyspell-goto-next-error)
-  (ispell-word)
-  )
-
-;; Spell check comments in c++ and c common
-(add-hook 'c++-mode-hook  'flyspell-prog-mode)
-(add-hook 'c-mode-common-hook 'flyspell-prog-mode)
-
-;; Enable flyspell in text mode
-(if (fboundp 'prog-mode)
-    (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (dolist (hook '(lisp-mode-hook emacs-lisp-mode-hook scheme-mode-hook
-				 clojure-mode-hook ruby-mode-hook yaml-mode
-				 python-mode-hook shell-mode-hook php-mode-hook
-				 css-mode-hook haskell-mode-hook caml-mode-hook
-				 nxml-mode-hook crontab-mode-hook perl-mode-hook
-				 tcl-mode-hook javascript-mode-hook))
-    (add-hook hook 'flyspell-prog-mode)))
-
-(dolist (hook '(text-mode-hook))
-  (add-hook hook (lambda () (flyspell-mode 1))))
-(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
-  (add-hook hook (lambda () (flyspell-mode -1))))
-
-
-#+END_SRC
 * Magit
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "M-g M-s") 'magit-status)
 (global-set-key (kbd "M-g M-c") 'magit-checkout)
 #+END_SRC
-* org-mode
+* Org-mode
 ** Source Code Syntax
 #+BEGIN_SRC emacs-lisp
 (org-babel-do-load-languages
