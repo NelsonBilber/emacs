@@ -1,0 +1,14 @@
+#+TITLE: Emacs FAQ
+#+AUTHOR: Nelson Rodrigues
+
+* Key Binds
+https://www.gnu.org/software/emacs/tour/
+* Edit Multiple Lines at once
+https://stackoverflow.com/questions/761706/in-emacs-edit-multiple-lines-at-once
+* Windows, Frames, Buffers
+So here's the summary:
+*frames* are what you call "windows" in basically all of your other software
+*windows* are divisions of frames
+*buffers* hold the stuff that you display in windows
+*buffers* may or may not be visiting (i.e., be associated with) a file
+https://emacs.stackexchange.com/questions/13583/whats-the-difference-between-a-buffer-a-file-a-window-and-a-frame
