@@ -54,9 +54,9 @@ C-u C-u C-u C-n	=> Forward 64 Lines
 
 M-g g 	=> Jump to specific line
 ** Zoom
-C X -	 => Zoom out
-C X +	 => Zoom in
-C X 0	 => Zoom reset
+C X -	 => Zoom out #+HTML: <br>
+C X +	 => Zoom in #+HTML: <br>
+C X 0	 => Zoom reset #+HTML: <br>
 ** Mark
 C-SPC	=> Set mark to the current location
 C-x C-x => Swap point and mark
