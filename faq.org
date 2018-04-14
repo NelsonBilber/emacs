@@ -54,68 +54,130 @@ C-u C-u C-u C-n	=> Forward 64 Lines
 
 M-g g 	=> Jump to specific line
 ** Zoom
-C X -	 => Zoom out #+HTML: <br>
-C X +	 => Zoom in #+HTML: <br>
-C X 0	 => Zoom reset #+HTML: <br>
+C X -	 => Zoom out 
+
+C X +	 => Zoom in 
+
+C X 0	 => Zoom reset
+
 ** Mark
+
 C-SPC	=> Set mark to the current location
+
 C-x C-x => Swap point and mark
+
 C-u C-SAP => Cycle trought mark ring
+
 ** Region
+
 Selected marked area
+
 C-x h 	=> Select all buffer
+
 M-h 	=> Select current paragraph
+
 C-x n n => Narrow buffer to the current region
+
 C-x n w => Restore ("widen") buffer
+
 ** Killing ("cutting")
+
 C-k 	=> Kill the line
+
 C-u 10 c-k => Kill 10 lines
+
 C-w	=> "Cut"- kill the Region
+
 M-w	=> "Copy" - Save the region to kill ring without deleting
+
 M-d	=> Kill next word
-M-k 	=> Kill to end of setence
+
+M-k 	=> Kill to end of sentence
+
 ** Yanking("pasting")
+
 C-Y 	=> Yanks las killed text
+
 M-y	=> Replace yanked text with previously killed text
+
 ** Undo
+
 C-/
+
 C-_
+
 C-x u
+
 ** Search
+
 C-s 	=> Incremental Search
+
 C-s C-s => Search for most recently searched item
+
 C-s M-P => Previous item in search history
+
 C-s M-n	=> Next item in search history
+
 C-h k C-s => Guido to more search commands availabe in incremental search
+
 C-r 	=> Incremental Search backward
+
 *** Dir mode
+
 M-x Dired => file manager mode
+
 C-x C-1 =>  Switch Editable and Dired Mode
+
 ** Search and Replace
+
 M-%	=> Query replace
+
 C-M-s 	=> Regular expression incremental search 	
+
 ** Macros
+
 F3 	=> Start recording
+
 F4 	=> Stop recording
+
 F4 	=> Run macro once
+
 M-5 F4 	=> Play macro 5 times
+
 ** M-X Commands
+
 M-X shell
+
 M-X compile
+
 M-X gdb
+
 M-X grep
+
 M-X man
+
 ** Org-mode
+
 C-c c TAB 	=> collapses all nodes above current item
+
 C-u C-u TAB	=> collapses all nodes on
+
 ** Links
+
 https://www.gnu.org/software/emacs/tour/
+
 * Edit Multiple Lines at once
+
 https://stackoverflow.com/questions/761706/in-emacs-edit-multiple-lines-at-once
+
 * Windows, Frames, Buffers
+
 So here's the summary:
 *frames* are what you call "windows" in basically all of your other software
 *windows* are divisions of frames
+
 *buffers* hold the stuff that you display in windows
+
 *buffers* may or may not be visiting (i.e., be associated with) a file
+
 https://emacs.stackexchange.com/questions/13583/whats-the-difference-between-a-buffer-a-file-a-window-and-a-frame
