@@ -1,7 +1,92 @@
 #+TITLE: Emacs FAQ
 #+AUTHOR: Nelson Rodrigues
+	
+* keys Binds
+** Basics
+C-h t 	=> tutorial
+C-h k 	=> Help with commands keys
+C-h f 	=> Help with commands functions
+C-f 	=> Forward one character
+M-f 	=> Fowward one word
+C-b 	=> Back one character
+M-b 	=> Back one word
+C-n 	=> Next Line
+C-p 	=> Previous Line
+C-a 	=> Beginning of line
+M-a 	=> Previous Sentence
+C-e 	=> End of line
+M-e 	=> Next Sentence
+M-v	=> Prevuous Screen
+M-<	=> Beginning of Buffer
+M->	=> End of Buffer
 
-* Key Binds
+M-[digit]
+C-u [digit]
+
+C-u 3 C-p 	=> Back 3 Lines
+C-u 10 C-f 	=> Forward 10 Characteres
+M1 M0 C-f	=> Forward 10 Characters
+C-u C-n 	=> Forward 10 Charcaters
+C-u C-u C-n 	=> Forward 16 Lines
+C-u C-u C-u C-n	=> Forward 64 Lines
+
+M-g g 	=> Jump to specific line
+** Zoom
+C X -	 => Zoom out
+C X +	 => Zoom in
+C X 0	 => Zoom reset
+** Mark
+C-SPC	=> Set mark to the current location
+C-x C-x => Swap point and mark
+C-u C-SAP => Cycle trought mark ring
+** Region
+Selected marked area
+C-x h 	=> Select all buffer
+M-h 	=> Select current paragraph
+C-x n n => Narrow buffer to the current region
+C-x n w => Restore ("widen") buffer
+** Killing ("cutting")
+C-k 	=> Kill the line
+C-u 10 c-k => Kill 10 lines
+C-w	=> "Cut"- kill the Region
+M-w	=> "Copy" - Save the region to kill ring without deleting
+M-d	=> Kill next word
+M-k 	=> Kill to end of setence
+** Yanking("pasting")
+C-Y 	=> Yanks las killed text
+M-y	=> Replace yanked text with previously killed text
+** Undo
+C-/
+C-_
+C-x u
+** Search
+C-s 	=> Incremental Search
+C-s C-s => Search for most recently searched item
+C-s M-P => Previous item in search history
+C-s M-n	=> Next item in search history
+C-h k C-s => Guido to more search commands availabe in incremental search
+C-r 	=> Incremental Search backward
+*** Dir mode
+M-x Dired => file manager mode
+C-x C-1 =>  Switch Editable and Dired Mode
+** Search and Replace
+M-%	=> Query replace
+C-M-s 	=> Regular expression incremental search 	
+** Macros
+F3 	=> Start recording
+F4 	=> Stop recording
+F4 	=> Run macro once
+M-5 F4 	=> Play macro 5 times
+** M-X Commands
+M-X shell
+M-X compile
+M-X gdb
+M-X grep
+M-X man
+** Org-mode
+C-c c TAB 	=> collapses all nodes above current item
+C-u C-u TAB	=> collapses all nodes on
+** Links
 https://www.gnu.org/software/emacs/tour/
 * Edit Multiple Lines at once
 https://stackoverflow.com/questions/761706/in-emacs-edit-multiple-lines-at-once
