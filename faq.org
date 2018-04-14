@@ -173,6 +173,7 @@ https://stackoverflow.com/questions/761706/in-emacs-edit-multiple-lines-at-once
 * Windows, Frames, Buffers
 
 So here's the summary:
+
 *frames* are what you call "windows" in basically all of your other software
 *windows* are divisions of frames
 
