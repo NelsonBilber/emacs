@@ -175,6 +175,7 @@ https://stackoverflow.com/questions/761706/in-emacs-edit-multiple-lines-at-once
 So here's the summary:
 
 *frames* are what you call "windows" in basically all of your other software
+
 *windows* are divisions of frames
 
 *buffers* hold the stuff that you display in windows
