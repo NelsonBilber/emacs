@@ -159,11 +159,57 @@ M-X grep
 
 M-X man
 
+** Flycheck
+
+f8 	=> correct
+
+C-S f8 	=> flycheck-mode 
+
+C-M f8 	=> flycheck-buffer 
+
+C f8 	=> flycheck-check previous hight-line mode
+
+M f8	=> flycheck-check previous hight-line word
+
+** Cmake
+
+C-c m 	=> compile
+
+** Company
+
+tab 	=> company complete mode
+
+** Helm
+
+C-c ! h 	=> helm flycheck mode
+
+C-c h		=> helm command prefix
+
+M-x 		=> Helm M-x
+
+C-x b		=> helm min
+
+C-x C-b 	=> helm-buffer-list
+
+C-c C-f		=> helm-find-files
+
+C-C t		=> helm ctest
+
 ** TODO Org-mode
 
 C-c c TAB 	=> collapses all nodes above current item
 
 C-u C-u TAB	=> collapses all nodes on
+
+C-c l 		=> Store link
+
+C-c a 		=> org - agenda
+
+** TODO Magit
+
+M-g M-s 	=> magit status
+
+M-g M-c		=> magit checkout
 
 ** Links
 
