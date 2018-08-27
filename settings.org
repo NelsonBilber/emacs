@@ -18,28 +18,32 @@
 ;; I don't care to see the splash screen
 ;;(setq inhibit-splash-screen t)
 
-;;(when (display-graphic-p)
+(when (display-graphic-p)
 ;; Hide the scroll bar
-;;(scroll-bar-mode -1)
-;;(defvar my-font-size 90)
+(scroll-bar-mode -1)
+(defvar my-font-size 110)
 ;; Make mode bar small
-;;(set-face-attribute 'mode-line nil  :height my-font-size)
+(set-face-attribute 'mode-line nil  :height my-font-size)
 ;; Set the header bar font
-;;(set-face-attribute 'header-line nil  :height my-font-size)
+(set-face-attribute 'header-line nil  :height my-font-size)
 ;; Set default window size and position
 ;;(setq default-frame-alist
 ;;      '((top . 0) (left . 0) ;; position
 ;;        (width . 110) (height . 90) ;; size
 ;;        ))
+
 ;; Enable line numbers on the LHS
 ;; (global-linum-mode 1)
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
 ;; Set the font to size 9 (90/10).
-;; (set-face-attribute 'default nil :height my-font-size)
-;; )
+ (set-face-attribute 'default nil :height my-font-size)
+ )
 
-;;(setq-default indicate-empty-lines t)
-;;(when (not indicate-empty-lines)
-;;  (toggle-indicate-empty-lines))
+(setq-default indicate-empty-lines t)
+(when (not indicate-empty-lines)
+  (toggle-indicate-empty-lines))
+
 #+END_SRC
 ** Stop creating those backup files					
 #+BEGIN_SRC emacs-lisp
@@ -79,6 +83,21 @@
   (insert "\t"))
 (global-set-key (kbd "TAB") 'my-insert-tab-char) ; same as Ctrl+i
 (setq cperl-invalid-face 'default)
+
+;backtab
+(global-set-key (kbd "<S-tab>") 'un-indent-by-removing-4-spaces)
+(defun un-indent-by-removing-4-spaces ()
+  "remove 4 spaces from beginning of of line"
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (beginning-of-line)
+      ;; get rid of tabs at beginning of line
+      (when (looking-at "^\\s-+")
+        (untabify (match-beginning 0) (match-end 0)))
+      (when (looking-at "^    ")
+        (replace-match "")))))
+
 #+END_SRC
 ** Word wrap
 #+BEGIN_SRC emacs-lisp
@@ -185,7 +204,7 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 #+END_SRC
 ** OSX bracelets
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lis
 (setq default-input-method "MacOSX")
 (setq mac-command-modifier 'meta
       mac-option-modifier nil
@@ -428,8 +447,8 @@
 
 ;; Zero delay when pressing tab
 (setq company-idle-delay 0)
-(define-key c-mode-map [(tab)] 'company-complete)
-(define-key c++-mode-map [(tab)] 'company-complete)
+(define-key c-mode-map [(C-tab)] 'company-complete)
+(define-key c++-mode-map [(C-tab)] 'company-complete)
 ;; Delay when idle because I want to be able to think without
 ;; completions immediately being called and slowing me down.
 (setq company-idle-delay 0.2)
@@ -624,6 +643,8 @@
 (set-exec-path-from-shell-PATH)
 (setq org-latex-default-packages-alist (cons '("mathletters" "ucs" nil) org-latex-default-packages-alist))
 #+END_SRC
+** Mobile
+(setq org-mobile-directory "~/Dropbox/MobileOrg")
 * Dirtree
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/dirtree")
