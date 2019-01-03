@@ -1,50 +1,62 @@
-* General Settings
-** General
+* Melpa Packages
+# load emacs 24's package system. Add MELPA repository.
 #+BEGIN_SRC emacs-lisp
-;; The deeper blue theme is loaded but the resulting text
-;; appears black in Aquamacs. This can be fixed by setting
-;; the font color under Menu Bar->Options->Appearance->Font For...
-;; and then setting "Adopt Face and Frame Parameter as Frame Default"
+(when (>= emacs-major-version 24)
+  (require 'package)
+  (add-to-list
+   'package-archives
+   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
+   '("melpa" . "http://melpa.milkbox.net/packages/")
+   t))
 
-;;(if window-system
-;;    (load-theme 'deeper-blue t)
-;;  (load-theme 'wheatgrass t))
-
-;; Set the background color for the header.
-
-;; company-mode colors. These are borrowed from Solarized and tweaked to look better
-;; with deeper-blue. Could use improvement but I have no time.
-
-;; I don't care to see the splash screen
-;;(setq inhibit-splash-screen t)
-
-(when (display-graphic-p)
-;; Hide the scroll bar
-(scroll-bar-mode -1)
-(defvar my-font-size 110)
-;; Make mode bar small
-(set-face-attribute 'mode-line nil  :height my-font-size)
-;; Set the header bar font
-(set-face-attribute 'header-line nil  :height my-font-size)
-;; Set default window size and position
-;;(setq default-frame-alist
-;;      '((top . 0) (left . 0) ;; position
-;;        (width . 110) (height . 90) ;; size
-;;        ))
-
-;; Enable line numbers on the LHS
-;; (global-linum-mode 1)
-(when (version<= "26.0.50" emacs-version )
-  (global-display-line-numbers-mode))
-;; Set the font to size 9 (90/10).
- (set-face-attribute 'default nil :height my-font-size)
- )
-
-(setq-default indicate-empty-lines t)
-(when (not indicate-empty-lines)
-  (toggle-indicate-empty-lines))
+;; You might already have this line
+(package-initialize)
+;; list the packages you want
+(defvar package-list)
+(setq package-list '(async 
+			auctex 
+			auto-complete 
+			autopair 
+			clang-format 
+			cmake-ide
+            cmake-mode 
+			company 
+			company-irony
+            company-irony-c-headers 
+			dash 
+			epl
+			flycheck
+            flycheck-irony
+			flycheck-pyflakes 
+            google-c-style 
+			helm helm-core 
+			helm-ctest
+            helm-flycheck 
+			helm-flyspell 
+			helm-ls-git 
+			helm-ls-hg
+            irony 
+			let-alist 
+			levenshtein 
+			magit 
+			markdown-mode 
+            popup 
+			rtags 
+			seq 
+			solarized-theme 
+			writegood-mode 
+			yasnippet))
+;; fetch the list of packages available
+(unless package-archive-contents
+  (package-refresh-contents))
+;; install the missing packages
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
 
 #+END_SRC
+
+* General Settings
 ** Stop creating those backup files					
 #+BEGIN_SRC emacs-lisp
 (setq make-backup-files nil) 
@@ -62,6 +74,10 @@
 #+BEGIN_SRC emacs-lisp
 (if window-system
     (tool-bar-mode 0))
+#+END_SRC
+** Disable scroll-bar
+#+BEGIN_SRC emacs-lisp
+(scroll-bar-mode -1)
 #+END_SRC
 ** Disable buffer sounds
 #+BEGIN_SRC emacs-lisp
@@ -103,96 +119,86 @@
 #+BEGIN_SRC emacs-lisp
 (global-visual-line-mode t)
 #+END_SRC
-** Header Information
+** Disable startup message
 #+BEGIN_SRC emacs-lisp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Enable which function mode and set the header line to display both the
-;; path and the function we're in
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(which-function-mode t)
+(setq inhibit-startup-screen t)
+      (setq initial-scratch-message ";; Happy Hacking")
+#+END_SRC
+** Line Numbers
+#+BEGIN_SRC emacs-lisp
+(when (version<= "26.0.50" emacs-version )
+  (global-display-line-numbers-mode))
+#+END_SRC
+** Mode Line (%)
+#+BEGIN_SRC emacs-lisp
 
-;; Remove function from mode bar
-(setq mode-line-misc-info
-      (delete (assoc 'which-func-mode
-                     mode-line-misc-info) mode-line-misc-info))
+;; Set the modeline to tell me the filename, hostname, etc..
+(setq-default mode-line-format
+      (list " "
+            ; */% indicators if the file has been modified
+            'mode-line-modified
+            "--"
+            ; the name of the buffer (i.e. filename)
+            ; note this gets automatically highlighted
+            'mode-line-buffer-identification
+            "--"
+            ; major and minor modes in effect
+            'mode-line-modes
+            ; if which-func-mode is in effect, display which
+            ; function we are currently in.
+            '(which-func-mode ("" which-func-format "--"))
+            ; line, column, file %
+            'mode-line-position
+            "--"
+            ; if vc-mode is in effect, display version control
+            ; info here
+            `(vc-mode vc-mode)
+            "--"
+            ; hostname
+            'system-name
+            ; dashes sufficient to fill rest of modeline.
+            "-%-"
+            )
+)
 
+#+END_SRC
 
-(defmacro with-face
-    (str &rest properties)
-  `(propertize ,str 'face (list ,@properties)))
-
-(defun sl/make-header ()
-  "."
-  (let* ((sl/full-header (abbreviate-file-name buffer-file-name))
-         (sl/header (file-name-directory sl/full-header))
-         (sl/drop-str "[...]")
-         )
-    (if (> (length sl/full-header)
-           (window-body-width))
-        (if (> (length sl/header)
-               (window-body-width))
-            (progn
-              (concat (with-face sl/drop-str
-                                 :background "blue"
-                                 :weight 'bold
-                                 )
-                      (with-face (substring sl/header
-                                            (+ (- (length sl/header)
-                                                  (window-body-width))
-                                               (length sl/drop-str))
-                                            (length sl/header))
-                                 ;; :background "red"
-                                 :weight 'bold
-                                 )))
-          (concat 
-           (with-face sl/header
-                      ;; :background "red"
-                      :foreground "red"
-                      :weight 'bold)))
-      (concat (if window-system ;; In the terminal the green is hard to read
-                  (with-face sl/header
-                             ;; :background "green"
-                             ;; :foreground "black"
-                             :weight 'bold
-                             :foreground "#8fb28f"
-                             )
-                (with-face sl/header
-                           ;; :background "green"
-                           ;; :foreground "black"
-                           :weight 'bold
-                           :foreground "blue"
-                           ))
-              (with-face (file-name-nondirectory buffer-file-name)
-                         :weight 'bold
-                         ;; :background "red"
-                         )))))
-
-(defun sl/display-header ()
-  "Create the header string and display it."
-  ;; The dark blue in the header for which-func is terrible to read.
-  ;; However, in the terminal it's quite nice
-  (if window-system
-      (custom-set-faces
-       '(which-func ((t (:foreground "#8fb28f")))))
-    (custom-set-faces
-     '(which-func ((t (:foreground "blue"))))))
-  ;; Set the header line
-  (setq header-line-format
-        
-        (list "-"
-              '(which-func-mode ("" which-func-format))
-              '("" ;; invocation-name
-                (:eval (if (buffer-file-name)
-                           (concat "[" (sl/make-header) "]")
-                         "[%b]")))
-              )
-        )
-  )
-;; Call the header line update
-(add-hook 'buffer-list-update-hook
-          'sl/display-header)
-
-
+* Helm
+#+BEGIN_SRC emacs-lisp
+;; Load helm and set M-x to helm, buffer to helm, and find files to herm
+(require 'helm-config)
+(require 'helm)
+(require 'helm-ls-git)
+(require 'helm-ctest)
+;; Use C-c h for helm instead of C-x c
+(global-set-key   (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+(global-set-key   (kbd "M-x") 'helm-M-x)
+(global-set-key   (kbd "C-x b") 'helm-mini)
+(global-set-key   (kbd "C-x C-b") 'helm-buffers-list)
+(global-set-key   (kbd "C-x C-f") 'helm-find-files)
+(global-set-key   (kbd "C-c t") 'helm-ctest)
+(setq
+ helm-split-window-in-side-p           t
+                                        ; open helm buffer inside current window,
+                                        ; not occupy whole other window
+ helm-move-to-line-cycle-in-source     t
+                                        ; move to end or beginning of source when
+                                        ; reaching top or bottom of source.
+ helm-ff-search-library-in-sexp        t
+                                        ; search for library in `require' and `declare-function' sexp.
+ helm-scroll-amount                    8
+                                        ; scroll 8 lines other window using M-<next>/M-<prior>
+ helm-ff-file-name-history-use-recentf t
+ ;; Allow fuzzy matches in helm semantic
+ helm-semantic-fuzzy-match t
+ helm-imenu-fuzzy-match    t)
+;; Have helm automaticaly resize the window
+(helm-autoresize-mode 1)
+(setq rtags-use-helm t)
+(require 'helm-flycheck) ;; Not necessary if using ELPA package
+(eval-after-load 'flycheck
+  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 #+END_SRC
 
 * Mac OS X Tweaks
@@ -202,73 +208,24 @@
 (setq exec-path (append exec-path '("/usr/texbin")))
 (setq exec-path (append exec-path '("/usr/bin")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
-#+END_SRC
-** OSX bracelets
-#+BEGIN_SRC emacs-lis
-(setq default-input-method "MacOSX")
-(setq mac-command-modifier 'meta
-      mac-option-modifier nil
-      mac-allow-anti-aliasing t
-      mac-command-key-is-meta t)
-#+END_SRC
-* Melpa Packages
-# load emacs 24's package system. Add MELPA repository.
-#+BEGIN_SRC emacs-lisp
-(when (>= emacs-major-version 24)
-  (require 'package)
-  (add-to-list
-   'package-archives
-   ;; '("melpa" . "http://stable.melpa.org/packages/") ; many packages won't show if using stable
-   '("melpa" . "http://melpa.milkbox.net/packages/")
-   t))
 
-;; You might already have this line
-(package-initialize)
-;; list the packages you want
-(defvar package-list)
-(setq package-list '(async 
-			auctex 
-			auto-complete 
-			autopair 
-			clang-format 
-			cmake-ide
-                        cmake-mode 
-			company 
-			company-irony
-                        company-irony-c-headers 
-			dash 
-			epl
-			flycheck
-                        flycheck-irony
-			flycheck-pyflakes 
-                        google-c-style 
-			helm helm-core 
-			helm-ctest
-                        helm-flycheck 
-			helm-flyspell 
-			helm-ls-git 
-			helm-ls-hg
-                        irony 
-			let-alist 
-			levenshtein 
-			magit 
-			markdown-mode 
-                        popup 
-			rtags 
-			seq 
-			solarized-theme 
-			writegood-mode 
-			yasnippet))
-;; fetch the list of packages available
-(unless package-archive-contents
-  (package-refresh-contents))
-;; install the missing packages
-(dolist (package package-list)
-  (unless (package-installed-p package)
-    (package-install package)))
+(when (eq system-type 'darwin)
+    (setq ns-use-native-fullscreen nil)
+    (setq mac-option-key-is-meta nil)
+    (setq mac-command-key-is-meta t)
+    (setq mac-command-modifier 'meta)
+    (setq mac-option-modifier nil)
+    (setq ns-function-modifier 'hyper))
 
 #+END_SRC
+* NeoTree
+(require 'neotree)
 * C++
+** Set Code Style
+#+BEGIN_SRC emacs-lisp
+(setq-default c-basic-offset 4 c-default-style "linux")
+(setq-default tab-width 4 indent-tabs-mode t)
+#+END_SRC
 ** Flycheck
 #+BEGIN_SRC emacs-lisp
 ;; If for some reason you're not using CMake you can use a tool like
@@ -322,11 +279,11 @@
 ;; Fly spell keyboard shortcuts so no mouse is needed
 ;; Use helm with flyspell
 (define-key flyspell-mode-map (kbd "<f8>") 'helm-flyspell-correct)
-;; (global-set-key (kbd "<f8>") 'ispell-word)
-(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-(global-set-key (kbd "C-<f8>") 'flyspell-check-previous-highlighted-word)
-(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+;; (global-set-key (kbd "<f8>")     'ispell-word)
+(global-set-key    (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key    (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key    (kbd "C-<f8>")   'flyspell-check-previous-highlighted-word)
+(global-set-key    (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 ;; Set the way word highlighting is done
 (defun flyspell-check-next-highlighted-word ()
   "Custom function to spell check next highlighted word."
@@ -342,34 +299,28 @@
 ;; Enable flyspell in text mode
 (if (fboundp 'prog-mode)
     (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-  (dolist (hook '(lisp-mode-hook emacs-lisp-mode-hook scheme-mode-hook
-				 clojure-mode-hook ruby-mode-hook yaml-mode
-				 python-mode-hook shell-mode-hook php-mode-hook
-				 css-mode-hook haskell-mode-hook caml-mode-hook
-				 nxml-mode-hook crontab-mode-hook perl-mode-hook
-				 tcl-mode-hook javascript-mode-hook))
+  (dolist (hook '(lisp-mode-hook 
+		emacs-lisp-mode-hook 
+		scheme-mode-hook
+		clojure-mode-hook
+		ruby-mode-hook 
+		yaml-mode
+		python-mode-hook 
+		shell-mode-hook php-mode-hook
+		css-mode-hook 
+		haskell-mode-hook 
+		caml-mode-hook
+		nxml-mode-hook 
+		crontab-mode-hook 
+		perl-mode-hook
+		tcl-mode-hook 
+		javascript-mode-hook))
     (add-hook hook 'flyspell-prog-mode)))
 
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
 (dolist (hook '(change-log-mode-hook log-edit-mode-hook))
   (add-hook hook (lambda () (flyspell-mode -1))))
-#+END_SRC
-** Cmake-ide
-#+BEGIN_SRC emacs-lisp
-(require 'cmake-ide)
-(cmake-ide-setup)
-;; Set cmake-ide-flags-c++ to use C++11
-(setq cmake-ide-flags-c++ (append '("-std=c++11")))
-;; We want to be able to compile with a keyboard shortcut
-(global-set-key (kbd "C-c m") 'cmake-ide-compile)
-;; Set rtags to enable completions and use the standard keybindings.
-;; A list of the keybindings can be found at:
-;; http://syamajala.github.io/c-ide.html
-(setq rtags-autostart-diagnostics t)
-(rtags-diagnostics)
-(setq rtags-completions-enabled t)
-(rtags-enable-standard-keybindings)
 #+END_SRC
 ** Company and Irony
 #+BEGIN_SRC emacs-lisp
@@ -417,8 +368,10 @@
 (eval-after-load 'company
   '(add-to-list
     'company-backends '(company-irony-c-headers
-                        company-irony company-yasnippet
-                        company-clang company-rtags)
+                        company-irony 
+			company-yasnippet
+                        company-clang 
+			company-rtags)
     )
   )
 
@@ -426,23 +379,32 @@
   "Disable the company-semantic backend."
   (interactive)
   (setq company-backends (delete '(company-irony-c-headers
-                                   company-irony company-yasnippet
-                                   company-clang company-rtags
-                                   company-semantic) company-backends))
+                                   company-irony 
+				   company-yasnippet
+                                   company-clang 
+				   company-rtags
+                                   company-semantic) 
+				   company-backends))
   (add-to-list
    'company-backends '(company-irony-c-headers
-                       company-irony company-yasnippet
-                       company-clang company-rtags))
+                       	company-irony 
+			company-yasnippet
+                       	company-clang 
+			company-rtags))
   )
 (defun my-enable-semantic ()
   "Enable the company-semantic backend."
   (interactive)
   (setq company-backends (delete '(company-irony-c-headers
-                                   company-irony company-yasnippet
-                                   company-clang) company-backends))
+                                   company-irony 
+				   company-yasnippet
+                                   company-clang) 
+				   company-backends))
   (add-to-list
    'company-backends '(company-irony-c-headers
-                       company-irony company-yasnippet company-clang))
+                        company-irony 
+			company-yasnippet 
+			company-clang))
   )
 
 ;; Zero delay when pressing tab
@@ -484,6 +446,23 @@
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 #+END_SRC
+** Cmake-ide
+#+BEGIN_SRC emacs-lisp
+(require 'cmake-ide)
+(cmake-ide-setup)
+;; Set cmake-ide-flags-c++ to use C++11
+(setq cmake-ide-flags-c++ (append '("-std=c++11")))
+;; We want to be able to compile with a keyboard shortcut
+(global-set-key (kbd "C-c m") 'cmake-ide-compile)
+;; Set rtags to enable completions and use the standard keybindings.
+;; A list of the keybindings can be found at:
+;; http://syamajala.github.io/c-ide.html
+(setq rtags-autostart-diagnostics t)
+(rtags-diagnostics)
+(setq rtags-completions-enabled t)
+(rtags-enable-standard-keybindings)
+(setq cmake-ide-build-dir "build/")
+#+END_SRC
 ** Cmake-mode
 #+BEGIN_SRC emacs-lisp
 (require 'cmake-mode)
@@ -503,44 +482,7 @@
 (yas-global-mode 1)
 (yas-reload-all)
 #+END_SRC
-* Helm
-#+BEGIN_SRC emacs-lisp
-;; Load helm and set M-x to helm, buffer to helm, and find files to herm
-(require 'helm-config)
-(require 'helm)
-(require 'helm-ls-git)
-(require 'helm-ctest)
-;; Use C-c h for helm instead of C-x c
-(global-set-key (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-c t") 'helm-ctest)
-(setq
- helm-split-window-in-side-p           t
-                                        ; open helm buffer inside current window,
-                                        ; not occupy whole other window
- helm-move-to-line-cycle-in-source     t
-                                        ; move to end or beginning of source when
-                                        ; reaching top or bottom of source.
- helm-ff-search-library-in-sexp        t
-                                        ; search for library in `require' and `declare-function' sexp.
- helm-scroll-amount                    8
-                                        ; scroll 8 lines other window using M-<next>/M-<prior>
- helm-ff-file-name-history-use-recentf t
- ;; Allow fuzzy matches in helm semantic
- helm-semantic-fuzzy-match t
- helm-imenu-fuzzy-match    t)
-;; Have helm automaticaly resize the window
-(helm-autoresize-mode 1)
-(setq rtags-use-helm t)
-(require 'helm-flycheck) ;; Not necessary if using ELPA package
-(eval-after-load 'flycheck
-  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
-#+END_SRC
-* Magit
+* TODO Magit
 #+BEGIN_SRC emacs-lisp
 (global-set-key (kbd "M-g M-s") 'magit-status)
 (global-set-key (kbd "M-g M-c") 'magit-checkout)
@@ -548,6 +490,7 @@
 * Org-mode
 ** Source Code Syntax
 #+BEGIN_SRC emacs-lisp
+	
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(
@@ -556,15 +499,12 @@
    (haskell . t)
    (gnuplot . t)
    (latex . t)
-   ;;(ledger . t)
    (js . t)
    (haskell . t)
    (python . t)
    ;; (gnuplot . t)
-   ;; org-babel does not currently support php.  That is really sad.
-   ))
+  ))
 
-;;(setq org-startup-indented t)
 
 (setq org-src-fontify-natively t)
 (setq org-startup-with-inline-images t)
@@ -576,56 +516,37 @@
 				   (file . find-file)
 				   (wl . wl-other-frame))))
 #+END_SRC
-** Export File Types
+** Add TODO keyword
 #+BEGIN_SRC emacs-lisp
-;;org export file types
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-color-faces-vector
-   [default default default italic underline success warning error])
- '(ansi-color-names-vector
-   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(custom-enabled-themes (quote (adwaita)))
- '(org-export-backends (quote (ascii html icalendar latex md)))
- '(package-selected-packages
-   (quote
-    (flycheck 
-	company 
-	cmake-ide 
-	clang-format 
-	autopair 
-	auto-complete-clang 
-	cpputils-cmake 
-	cmake-mode 
-	cmake-project 
-	yasnippet 
-	org-capture-pop-frame 
-	org-babel-eval-in-repl 
-	htmlize 
-	auto-complete-c-headers
-))))
-#+END_SRC
-** Capture
-#+BEGIN_SRC emacs-lisp
-;org capture
-(setq org-capture-templates
-      '(("t" "Todo" entry (file+headline "~/Dropbox/notes/org/gtd.org" "Tasks")
-         "* TODO %?\n  %i\n  %a")
-	("j" "Journal" entry (file+olp+datetree "~/Dropbox/notes/org/journal.org")
-         "* %?\nEntered on %U\n  %i\n  %a")))
-#+END_SRC
-** Agenda
-#+BEGIN_SRC emacs-lisp
-;;org agenda
-(require 'org)
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
-;; org-agenda file
-(setq org-agenda-files (list "~/Dropbox/notes/org/gtd.org"))
+(setq org-todo-keywords
+  '((sequence 
+	"TODO"
+      	"MAYBE"
+      	"NEXT"
+      	"STARTED"
+      	"WAITING"
+      	"DELEGATED"
+      	"|"
+      	"DONE"
+      	"DEFERRED"
+      	"CANCELLED")
+	))
+
+(setq org-todo-keyword-faces
+      '(
+        ("TODO" . (:foreground "red" :weight bold))
+        ("MAYBE" . (:foreground "brown" :weight bold))
+	("NEXT" . (:foreground "blue" :weight bold))
+	("STARTED" . (:foreground "green" :weight bold))
+	("WAITING" . (:foreground "blue" :weight bold))
+        ("DEFERRED" . (:foreground "purple" :weight bold))
+	("DELEGATED" . (:foreground "orange" :weight bold))
+	("|" . (:foreground "green" :weight bold))
+	("DONE" . (:foreground "forest green" :weight bold))
+	("DEFERRED" . (:foreground "orange" :weight bold))
+	("CANCELLED" . (:foreground "forest red" :weight bold))
+        ))
+
 #+END_SRC
 ** Latex
 #+BEGIN_SRC emacs-lisp
@@ -643,8 +564,6 @@
 (set-exec-path-from-shell-PATH)
 (setq org-latex-default-packages-alist (cons '("mathletters" "ucs" nil) org-latex-default-packages-alist))
 #+END_SRC
-** Mobile
-(setq org-mobile-directory "~/Dropbox/MobileOrg")
 * Dirtree
 #+BEGIN_SRC emacs-lisp
 (add-to-list 'load-path "~/.emacs.d/dirtree")
@@ -653,6 +572,7 @@
 #+END_SRC
 * Markdown
 #+BEGIN_SRC emacs-lisp
+
 (require 'markdown-mode)
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
@@ -661,4 +581,5 @@
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (custom-set-variables
  '(markdown-command "/usr/local/bin/pandoc"))
+
 #+END_SRC
