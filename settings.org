@@ -406,6 +406,7 @@
 ;; also provides a bunch of technically irrelevant completions sometimes.
 ;; All in all, RTags just seems to do a better job.
 (setq company-backends (delete 'company-semantic company-backends))
+
 ;; Enable company-irony and several other useful auto-completion modes
 ;; We don't use rtags since we've found that for large projects this can cause
 ;; async timeouts. company-semantic (after company-clang!) works quite well
@@ -413,49 +414,51 @@
 (eval-after-load 'company
   '(add-to-list
     'company-backends '(company-irony-c-headers
-                      	company-irony 
-						company-yasnippet
-                        company-clang 
-						company-rtags)
+			company-irony 
+			company-yasnippet
+			company-clang 
+			company-rtags)
     )
-  )
+ )
 
 (defun my-disable-semantic ()
   "Disable the company-semantic backend."
   (interactive)
   (setq company-backends (delete '(company-irony-c-headers
-                                   	company-irony 
-				   					company-yasnippet
-                                	company-clang 
-				   					company-rtags
-                                   	company-semantic) 
-				   					company-backends))
+				company-irony 
+				company-yasnippet
+				company-clang 
+				company-rtags
+				company-semantic) 
+				company-backends))
   (add-to-list
    'company-backends '(company-irony-c-headers
-                       	company-irony 
-						company-yasnippet
-                       	company-clang 
-						company-rtags))
-  )
+			company-irony 
+			company-yasnippet
+			company-clang 
+			company-rtags))
+)
+
 (defun my-enable-semantic ()
   "Enable the company-semantic backend."
   (interactive)
   (setq company-backends (delete '(company-irony-c-headers
-                                   	company-irony 
-				   					company-yasnippet
-                                	company-clang) 
-				 					company-backends))
+					company-irony 
+					company-yasnippet
+					company-clang) 
+					company-backends))
   (add-to-list
    'company-backends '(company-irony-c-headers
-                        company-irony 
-						company-yasnippet 
-						company-clang))
-  )
+			company-irony 
+			company-yasnippet 
+			company-clang))
+)
 
 ;; Zero delay when pressing tab
 (setq company-idle-delay 0)
 (define-key c-mode-map [(C-tab)] 'company-complete)
 (define-key c++-mode-map [(C-tab)] 'company-complete)
+
 ;; Delay when idle because I want to be able to think without
 ;; completions immediately being called and slowing me down.
 (setq company-idle-delay 0.2)
@@ -658,6 +661,12 @@
 
 #+END_SRC
 
-* TODO Research about 
+* TODO Research about
+ 
 ** TODO Multi-cursors
+
+...
+
 ** TODO Undo-tree
+
+...
