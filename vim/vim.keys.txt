@@ -1,0 +1,198 @@
+NORMAL MODE
+===========
+
+. - dot reat last command
+; - repeat to next target, e.g, find all + in text f+ the press ; to find next
+
+>G - command for increase indentation for current line
+
+a - appends where the cursor is
+A - appends on the end of line independent where cursor is
+f+ - find a character '+'
+/pattern - find next pattern match and repeat with keyword n or reverse with N
+?pattern - find previous pattern match and repeat with keyword n or reverse with N
+:/s/pattern/replace - find replace command repeat with key & and reverse using u
+cw - delete from current cursor position to end of word
+db - delete back word
+g~ - swap case
+gu - make lowercase
+gU - make uppercase
+> - shift right
+< - shift left
+= - auto indent
+! - filter motion for external program
+zz - redraws screen with current line n the middle of screen
+
+INSERT MODE
+===========
+
+C-h - delete back one character
+C-w - delete one back word
+C-u - delete back to start of Line
+ESQ - normal mode
+C-[ - normal mode
+C-o - switch to insert mode
+
+VISUAL MODE
+===========
+v - enable character visual mode
+V - enable line-wise visual mode
+C-v - enable block wise visual mode
+gv - reselect last visual 
+U - converts visual to uppercase
+c - selected text disappears and we are dropped into Insert Mode
+A - same as I and Esq combination but it appends on end of file
+filevi{ - select text/code inside {....}
+'<,'> sort - order text inside block> sort - order text inside blocks
+ggVG - Select all text
+:%y+ - select all and copy all text to buffer than can be pasted anywhere
+
+COMMAND-LINE MODE
+=================
+:l
+:2,5p - prints lines from that range
+@ - repeat last command
+q: - open command-line window history
+:changes - tack all changes in files
+:changes n - change to a specific modification
+:jumps
+:marks
+:delmarks
+:diff
+
+
+FILES
+=====
+:ls - list buffers ( % buffer is current window; # buffer is in alternative window )
+:bnext ( next  buffer )
+:bprevious ( previous buffer )
+:bfirst
+:blast
+:buffer N
+:bdelete N
+:args
+:edit {file}
+:find {file}
+:Explore
+:edit
+:write - save file
+
+BUFFERS
+=======
+C-w s - horizontal split
+C-w vs - vertical split
+:split {filename}
+:enew - opens an horizontal: buffer
+:vnew - opens a vertical buffer
+:close - closes buffer
+:only - closes all except current
+
+<C-w>= Equalize width and height of all windows 
+<C-w>_ Maximize height of the active window 
+<C-w>| Maximize width of the active window 
+[N]<C-w>_ Set active window height to [N] rows 
+[N]<C-w>| Set active window width to [N] columns
+
+TABS
+====
+:tabedit - {filename} - open filename
+<C-w>T - move
+:tabc - close current tab
+:tabo - keep active tab page
+:tabn - switch next tab
+:tabp - switch previous tab
+:tabmove - rearrange tabs  
+
+NAVIGATION
+==========
+“ Position before the last jump within current file 
+‘. Location of last change 
+‘^ Location of last insertion 
+‘[ Start of last change or yank 
+‘] End of last change or yank 
+‘< Start of last visual selection 
+‘> End of last visual selection
+% - navigate jump between opening and closing sets e.g. ()[]{}
+
+JUMPS
+=====
+%  - jump to matching parenthesis
+(/) - prev/next sentence
+{/} - prev/next paragraph
+[count]G - jump to line number
+
+
+MOTIONS
+=======
+Motion Explanation 
+0 Moves cursor to the start of the line 
+$ Moves cursor to the end of the line (inclusive of newline) 
+g_ Moves cursor to the end of the line (exclusive of newline) 
+b Moves cursor backward through each word 
+e Moves cursor to the end of the word
+w Moves cursor to the start of the next word 
+gg Moves cursor to the start of the buffer 
+G Moves cursor to the end of the buffer 
+( Moves cursor to the previous sentence 
+) Moves cursor to the next sentence 
+{ Moves cursor to the start of a paragraph 
+} Moves cursor to the end of a paragraph 
+
+NAVIGATION AROUND CODE
+=======================
+% Moves cursor to the next bracket (or parenthesis) 
+[( Moves cursor to previous available parenthesis 
+]) Moves cursor to next available parenthesis 
+[{ Moves cursor to previous available bracket 
+]} Moves cursor to next available bracket
+
+
+
+REGISTERS
+=========
+"+ - cut,paste,copy
+"* - middle buttons 
+
+MACROS
+======
+q - start/stop recording
+qa - start a register to register a
+:reg a apply register a
+@{register} - repeats a command that was executed recently
+:global 
+
+SEARCH
+======
+\ search forward
+? search backward
+n jumps next command
+N jumps previous command
+gn enable character wise Visual Mode command next search match
+gN enable character wise Visual Mode command next previous match
+hlsearch - highlighting search match
+* search in Visual model word underline command
+
+
+AUTOCOMPLETE
+============
+<C-p> autocomplete previous word in list
+<C-n> autocomplete next word in list
+
+SPELLCHECK
+==========
+:set spell
+:set spellang=fr
+]s jump next spell error
+[s jump previous spell error
+z= suggest corrections for current word
+zg add current word to dictionary
+zw remove current word from spell file
+
+
+FOLDING
+========
+zc - Close fold
+zo - Open the fold
+za - Alternate/toggle
+zM - closes all folds
+zR - opens all folds

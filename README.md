@@ -1,11 +1,5 @@
-# Emacs
+# Text Editors
 
-I like emacs ... and other operating systems too<br/>
+Like to use old text editors. This repository has some basic configurations for emacs and vim.
 
-Literate Emacs settings files for : <br/>
-
-* Ui tweaks
-* OSx tweaks
-* C++
-* Org-mode
-* Markdown
+Use whatever you like.
