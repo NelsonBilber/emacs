@@ -222,73 +222,6 @@
   (toggle-indicate-empty-lines))
 #+END_SRC
 
-* Keys and Shortcuts
-** Shift text
-
-#+BEGIN_SRC emacs-lisp
-
-;; Bind (shift-right) and (shift-left) function to your favorite keys. I use
-;; the following so that Ctrl-Shift-Right Arrow moves selected text one 
-;; column to the right, Ctrl-Shift-Left Arrow moves selected text one
-;; column to the left:
-
-(global-set-key [C-S-right] 'shift-right)
-(global-set-key [C-S-left] 'shift-left)
-
-#+END_SRC
-
-** Tabs
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "TAB") 'my-insert-tab-char) ; same as Ctrl+i
-(global-set-key (kbd "<S-tab>") 'un-indent-by-removing-4-spaces)
-#+END_SRC
-
-** NeoTree
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key [f7] 'neotree-toggle)
-#+END_SRC
-
-** Helm
-
-#+BEGIN_SRC emacs-lisp
-;; Use C-c h for helm instead of C-x c
-(global-set-key   (kbd "C-c h") 'helm-command-prefix)
-(global-unset-key (kbd "C-x c"))
-(global-set-key   (kbd "M-x") 'helm-M-x)
-(global-set-key   (kbd "C-x b") 'helm-mini)
-(global-set-key   (kbd "C-x C-b") 'helm-buffers-list)
-(global-set-key   (kbd "C-x C-f") 'helm-find-files)
-(global-set-key   (kbd "C-c t") 'helm-ctest)
-#+END_SRC
-
-** Flycheck
-
-#+BEGIN_SRC emacs-lisp
-
-(global-set-key (kbd "<f8>")     'helm-flyspell-correct)
-(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
-(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
-(global-set-key (kbd "C-<f8>")   'flyspell-check-previous-highlighted-word)
-(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
-
-#+END_SRC
-
-** Cmake
-
-#+BEGIN_SRC emacs-lisp
-;; We want to be able to compile with a keyboard shortcut
-(global-set-key (kbd "C-c m") 'cmake-ide-compile)
-#+END_SRC
-
-** Magit
-
-#+BEGIN_SRC emacs-lisp
-(global-set-key (kbd "M-g M-s") 'magit-status)
-(global-set-key (kbd "M-g M-c") 'magit-checkout)
-#+END_SRC
-
 * Helm
 #+BEGIN_SRC emacs-lisp
 ;; Load helm and set M-x to helm, buffer to helm, and find files to herm
@@ -338,7 +271,10 @@
 * NeoTree
 
 #+BEGIN_SRC emacs-lisp
+
 (require 'neotree)
+(setq neo-window-fixed-size nil)
+
 #+END_SRC
 
 * Flyspell Mode for Spelling Corrections
@@ -707,3 +643,71 @@
 ** TODO Undo-tree
 
 ...
+
+
+* Keys and Shortcuts
+** Shift text
+
+#+BEGIN_SRC emacs-lisp
+
+;; Bind (shift-right) and (shift-left) function to your favorite keys. I use
+;; the following so that Ctrl-Shift-Right Arrow moves selected text one 
+;; column to the right, Ctrl-Shift-Left Arrow moves selected text one
+;; column to the left:
+
+(global-set-key [C-S-right] 'shift-right)
+(global-set-key [C-S-left] 'shift-left)
+
+#+END_SRC
+
+** Tabs
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "TAB") 'my-insert-tab-char) ; same as Ctrl+i
+(global-set-key (kbd "<S-tab>") 'un-indent-by-removing-4-spaces)
+#+END_SRC
+
+** NeoTree
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key [f7] 'neotree-toggle)
+#+END_SRC
+
+** Helm
+
+#+BEGIN_SRC emacs-lisp
+;; Use C-c h for helm instead of C-x c
+(global-set-key   (kbd "C-c h") 'helm-command-prefix)
+(global-unset-key (kbd "C-x c"))
+(global-set-key   (kbd "M-x") 'helm-M-x)
+(global-set-key   (kbd "C-x b") 'helm-mini)
+(global-set-key   (kbd "C-x C-b") 'helm-buffers-list)
+(global-set-key   (kbd "C-x C-f") 'helm-find-files)
+(global-set-key   (kbd "C-c t") 'helm-ctest)
+#+END_SRC
+
+** Flycheck
+
+#+BEGIN_SRC emacs-lisp
+
+(global-set-key (kbd "<f8>")     'helm-flyspell-correct)
+(global-set-key (kbd "C-S-<f8>") 'flyspell-mode)
+(global-set-key (kbd "C-M-<f8>") 'flyspell-buffer)
+(global-set-key (kbd "C-<f8>")   'flyspell-check-previous-highlighted-word)
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+
+#+END_SRC
+
+** Cmake
+
+#+BEGIN_SRC emacs-lisp
+;; We want to be able to compile with a keyboard shortcut
+(global-set-key (kbd "C-c m") 'cmake-ide-compile)
+#+END_SRC
+
+** Magit
+
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-g M-s") 'magit-status)
+(global-set-key (kbd "M-g M-c") 'magit-checkout)
+#+END_SRC
